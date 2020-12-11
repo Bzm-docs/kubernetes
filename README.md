@@ -1,37 +1,21 @@
-#  kubernetes
+## README.md
 
-#### 介绍
-kubernetes 知识笔记
+[kubernetes笔记](https://gitee.com/BuZM/kubernetes/blob/master/笔记/kubernetes笔记.md)
 
-#### 软件架构
-软件架构说明
+![qrcode_for_gh_33acc8ff61a1_258](README.assets/kubernetes笔记.png)
 
+**以上来源自己总结、网上收集、视频笔记，如果有侵权之处，可以联系我进行删除**
 
-#### 安装教程
+因个人能力有限，笔记中可能还有很多错误的地方，还请大家能够多多指出交流，也欢迎各位小伙伴能够提交pull request请求进行完善
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+- **WeiXin**：Qain_zai521
+- **QQ**:2794127547
+- 码云：https://gitee.com/BuZM
 
-#### 使用说明
+> 欢迎打扰~~一起学习进步！
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+**公众号**：*<u>云计算小千</u>*
 
-#### 参与贡献
+![qrcode_for_gh_33acc8ff61a1_258](README.assets/qrcode_for_gh_33acc8ff61a1_258.jpg)
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+1
