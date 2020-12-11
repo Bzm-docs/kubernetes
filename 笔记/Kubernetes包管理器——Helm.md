@@ -306,9 +306,204 @@ clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
 
 ![image-20201210175221863](Kubernetes包管理器——Helm.assets/image-20201210175221863.png)
 
+## Helm 部署 Prometheus
+
+Prometheus github 地址：https://github.com/coreos/kube-prometheus
+
+### Prometheus 简介
+
+`Prometheus`是一个开放性的监控解决方案，用户可以非常方便的安装和使用Prometheus并且能够非常方便的对其进行扩展。为了能够更加直观的了解Prometheus Server，接下来我们将在本地部署并运行一个Prometheus Server实例，通过Node Exporter采集当前主机的系统资源使用情况。 并通过Grafana创建一个简单的可视化仪表盘。
+
+### 组件说明
+
+![Prometheus架构](Kubernetes包管理器——Helm.assets/Prometheus架构-1607668074107.png)
+
+1. `MetricServer`：是 kubernetes 集群资源使用情况的聚合器，收集数据给 kubernetes 集群内使用，如 kubectl,hpa,scheduler 等。
+2. `PrometheusOperator`：是一个系统监测和警报工具箱，用来存储监控数据。
+3. `NodeExporter`：用于各 node 的关键度量指标状态数据。
+4. `KubeStateMetrics`：收集 kubernetes 集群内资源对象数据，制定告警规则。
+5. `Prometheus`：采用 pull 方式收集 apiserver，scheduler，controller-manager，kubelet 组件数据，通过 http 协议传输。
+6. `Grafana`：是可视化数据统计和监控平台。
+
+
+
+### 安装部署
+
+**1、安装 kube-prometheus**
+
+这里要注意一下版本兼容问题，在[官网](https://github.com/prometheus-operator/kube-prometheus/tags)下载对应的版本即可
+
+| be-prometheus stack | Kubernetes 1.14 | Kubernetes 1.15 | Kubernetes 1.16 | Kubernetes 1.17 | Kubernetes 1.18 | Kubernetes 1.19 |
+| ------------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- |
+| lease-0.3           | ✔               | ✔               | ✔               | ✔               | ✗               | ✗               |
+| lease-0.4           | ✗               | ✗               | ✔               | (v1.16.5+) ✔    | ✗               | ✗               |
+| lease-0.5           | ✗               | ✗               | ✗               | ✗               | ✔               | ✗               |
+| lease-0.6           | ✗               | ✗               | ✗               | ✗               | ✔               | ✔               |
+| AD                  | ✗               | ✗               | ✗               | ✗               | ✗               | ✔               |
+
+```shell
+# 克隆相应的分支
+git clone -b release-0.3 https://github.com/coreos/kube-prometheus.git
+
+cd kube-prometheus/manifests
+```
+
+**2、修改 `grafana-service.yaml`：**
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  type: NodePort	# 添加内容
+  ports:
+    - name: http
+    port: 3000
+    targetPort: http
+    nodePort: 30100 #添加内容
+  selector:
+    app: grafana
+```
+
+**3、修改 `prometheus-service.yaml`：**
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    prometheus: k8s
+  name: prometheus-k8s
+  namespace: monitoring
+spec:
+  type: NodePort	# 添加
+  ports:
+    - name: web
+      port: 9090
+      targetPort: web
+      nodePort: 30200	# 添加
+  selector:
+    app: prometheus
+    prometheus: k8s
+  sessionAffinity: ClientIP
+```
+
+**4、修改 `alertmanager-service.yaml`：**
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    alertmanager: main
+  name: alertmanager-main
+  namespace: monitoring
+spec:
+  type: NodePort	# 添加
+  ports:
+    - name: web
+      port: 9093
+      targetPort: web
+      nodePort: 30300	# 添加
+  selector:
+    alertmanager: main
+    app: alertmanager
+  sessionAffinity: ClientIP
+```
+
+**5、安装**
+
+```shell
+# 在 kube-prometheus/manifests 目录下执行
+# 创建名称空间，prometheus 组件都在这个名称空间下
+kubectl create namespace monitoring
+
+# 这两个目录下的 yaml 都要创建
+kubectl apply -f ./setup
+kubectl apply -f .
+```
+
+> 在国内，镜像容易拉取失败
+
+**6、`kubectl top` 命令查看集群资源**
+
+```shell
+$ kubectl top node
+NAME           CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
+k8s-master01   1500m        75%    1142Mi          60%       
+k8s-node01     1691m        84%    946Mi           50%       
+k8s-node02     1411m        70%    912Mi           48% 
+
+$ kubectl top pod -n monitoring
+NAME                                  CPU(cores)   MEMORY(bytes)
+alertmanager-main-0                   2m           21Mi
+alertmanager-main-1                   2m           22Mi
+```
+
+### 访问 prometheus
+
+```shell
+$ kubectl get svc -o wide -n monitoring
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                   
+prometheus-k8s          NodePort    10.97.67.69      <none>        9090:30200/TCP               7m31s   app=prometheus,prometheus=k8s
+```
+
+> 根据前面安装时候的配置，`prometheus` 对应的 `nodeport` 端口为 `30200`，访问 `http://MasterIP:30200`
+
+![image-20201211151555699](Kubernetes包管理器——Helm.assets/image-20201211151555699.png)
+
+**1、查看 prometheus 的节点状态：**
+
+![image-20201211151634877](Kubernetes包管理器——Helm.assets/image-20201211151634877.png)
+
+**2、测试查询**
+
+prometheus 的 WEB 界面上提供了基本的查询 K8S 集群中每个 Pod 的 CPU 使用情况，查询条件如下：
+
+```sql
+sum by (pod_name)( rate(container_cpu_usage_seconds_total{image!="", pod_name!=""}[1m] ) )
+```
+
+![image-20201211151919835](Kubernetes包管理器——Helm.assets/image-20201211151919835.png)
+
+上述的查询有出现数据，说明 `node-exporter` 往 `prometheus` 中写入数据正常，接下来我们就可以部署 `grafana` 组件，实现更友好的 `webui` 展示数据了
+
+> `prometheus` 对系统时间的要求比较高，要确保 k8s 每个节点的时间都同步。通过阿里云服务器同步中国上海时间：`ntpdate ntp1.aliyun.com`
+
+### 访问 grafana
+
+查看 grafana 服务暴露的端口号：
+
+```shell
+$ kubectl get service -n monitoring | grep grafana
+grafana                 NodePort    10.100.227.242   <none>        3000:30100/TCP               21m
+```
+
+如上可以看到 `grafana` 的端口号是 `30100`，浏览器访问：`http://MasterIP:30100`，用户名密码默认 `admin/admin`，第一次登录后会要求修改密码。
+
+![image-20201211152359619](Kubernetes包管理器——Helm.assets/image-20201211152359619.png)
+
+**1、添加数据源**
+
+![20201126150309998](Kubernetes包管理器——Helm.assets/20201126150309998.png)
+
+![202011261515331](Kubernetes包管理器——Helm.assets/202011261515331.png)
+
+**2、查看节点**
+
+点击 Home，选择监控的对象，这里选择 Nodes
+
+![image-20201211153054843](Kubernetes包管理器——Helm.assets/image-20201211153054843.png)
+
+
+
 
 
 ## 其他
 
 [玩K8S不得不会的HELM](https://zhuanlan.zhihu.com/p/79046244)
+
+[prometheus-book](https://yunlzheng.gitbook.io/prometheus-book/)
 
