@@ -6,7 +6,7 @@
 
 >   是  Google	多年大规模容器管理技术 Borg的开源版本，由Go语言翻写。
 
-<img src="kubernetes笔记.assets/k8s图标.png" alt="k8s图标" style="zoom:80%;" />
+<img src="../笔记/kubernetes笔记.assets/k8s图标.png" alt="k8s图标" style="zoom:80%;" />
 
 ### Kubernetes 能做什么？
 
@@ -25,7 +25,7 @@
 
 >   Kubernetes 也需要与网络、存储、安全、监控等其它服务集成才能提供综合性的容器基础设施。
 
-![容器基础设施图](kubernetes笔记.assets/容器基础设施图.png)
+![容器基础设施图](media/kubernetes笔记.assets/容器基础设施图.png)
 
 ## Kubernetes 架构
 
@@ -33,13 +33,13 @@
 
 **Borg架构图**
 
-![Borg架构](kubernetes笔记.assets/Borg架构图.png)
+![Borg架构](media/kubernetes笔记.assets/Borg架构图.png)
 
 **Kubernetes 架构图**
 
 高可用的集群的副本至少是大于3 的奇数
 
-![Kubernetes 架构图](kubernetes笔记.assets/Kubernetes 架构图.png)
+![Kubernetes 架构图](media/kubernetes笔记.assets/Kubernetes 架构图.png)
 
 >   C/S结构：Server服务器，node节点。
 
@@ -67,7 +67,7 @@
 - 在同一个Pod里面，即共享网络，又共享存储
 ```
 
-![pod概念模型](kubernetes笔记.assets/pod概念模型.png)
+![pod概念模型](media/kubernetes笔记.assets/pod概念模型.png)
 
 #### Pod类型
 
@@ -100,7 +100,7 @@
 
 `Horizontal Pod Autoscaling `仅适用于`Deployment`和`ReplicaSet `，在v1版本中仅支持根据Pod的CPU 利用率扩所容，在vlalpha版本中，支持根据内存和用户自定义的metric扩缩容
 
-![Pod 水平自动扩缩工作机制](kubernetes笔记.assets/Pod 水平自动扩缩工作机制.png)
+![Pod 水平自动扩缩工作机制](media/kubernetes笔记.assets/Pod 水平自动扩缩工作机制.png)
 
 >   可以自定义扩缩规则：Cpu > 80，Max 10，Min 2
 
@@ -166,7 +166,7 @@ DaemonSet 的一些典型用法：
 <u>Pod1 至Pod2：</u>
 
 -   *Pod1* 与*Pod2* 不在同一台主机，*Pod*的地址是与*docker0*在同一个网段的，但*docker0*网段与宿主机网卡是两个完全不同的IP网段，并且不同Node之间的通信只能通过宿主机的物理网卡进行。将Pod的IP和所在Node的IP关联起来，通过这个关联让Pod可以互相访问
--    *Pod1* 与*Pod2* 在同一台机器，由*Docker0* 网桥直接转发请求至*Pod2*，不需要经过*Flannel*  
+-   *Pod1* 与*Pod2* 在同一台机器，由*Docker0* 网桥直接转发请求至*Pod2*，不需要经过*Flannel*  
 
 <u>Pod 至 Service的网络：</u>
 
@@ -180,7 +180,7 @@ DaemonSet 的一些典型用法：
 
 -   Service
 
-![组件通讯示意图](kubernetes笔记.assets/组件通讯示意图.webp)
+![组件通讯示意图](media/kubernetes笔记.assets/组件通讯示意图.webp)
 
 
 
@@ -188,7 +188,7 @@ DaemonSet 的一些典型用法：
 
 ##### Kubernetes + Flannel
 
-![Kubernetes + Flannel 网络原理](kubernetes笔记.assets/Kubernetes + Flannel 网络原理.webp)
+![Kubernetes + Flannel 网络原理](media/kubernetes笔记.assets/Kubernetes + Flannel 网络原理.webp)
 
 -   Flannel首先创建了一个名为flannel0的网桥，然后这个网桥的一端连接docker0的网桥，另一端连接一个名为flanneld的服务进程。
 -   Flanneld进程并不简单，它首先上连etcd，利用etcd来管理可分配的IP地址段资源，同时监控etcd中每个Pod的实际地址，并在内存中建立了一个Pod节点路由表；然后下连docker0和物理网络，使用内存中的Pod节点路由表，将docker0发给它的数据包包装起来，利用物理网络的连接将数据包投递到目标flanneld上，从而完成pod到pod之间的直接的地址通信。
@@ -212,7 +212,7 @@ DaemonSet 的一些典型用法：
 | k8s-node1    | 2/2    | 4G   |
 | k8s-node2    | 2/2    | 4G   |
 
-![k8s-集群规划](kubernetes笔记.assets/k8s-集群规划.png)
+![k8s-集群规划](media/kubernetes笔记.assets/k8s-集群规划.png)
 
 ### 搭建过程
 
@@ -419,7 +419,7 @@ systemctl enable kubelet.service
 
 直接`kubeadm init` ，会因为网络原因在这里卡很久。可以预先拉取配置。
 
-![预先配置拉取镜像](kubernetes笔记.assets/预先配置拉取镜像-1602238509688.png)
+![预先配置拉取镜像](media/kubernetes笔记.assets/预先配置拉取镜像-1602238509688.png)
 
 > `kubeadm-basic.images.tar.gz`：公众号：<u>云计算小千</u>  回复：*k8s安装*
 
@@ -532,7 +532,7 @@ vim /etc/docker/daemon.json
 "insecure-registries": ["https://hub.bzm.com"] 
 ```
 
-![daemon](kubernetes笔记.assets/daemon.png)
+![daemon](media/kubernetes笔记.assets/daemon.png)
 
 > 可以先做一个假的地址证书，在局域网内部
 
@@ -569,7 +569,7 @@ ui_url_protocol = https
 mkdir -p /data/cert/
 ```
 
-![image-20201010095729190](kubernetes笔记.assets/image-20201010095729190.png)
+![image-20201010095729190](media/kubernetes笔记.assets/image-20201010095729190.png)
 
 创建https 证书以及配置相关目录权限
 
@@ -631,7 +631,7 @@ cd /usr/local/harbor/
 ./install.sh 
 ```
 
-![harbor安装完成](kubernetes笔记.assets/harbor安装完成.png)
+![harbor安装完成](media/kubernetes笔记.assets/harbor安装完成.png)
 
 ```shell
 # 所有节点添加映射
@@ -643,7 +643,7 @@ echo "192.168.200.80 hub.bzm.com" >>/etc/hosts
 
 访问：https://hub.bzm.com；用户名：admin，密码：Harbor12345
 
-![Harbor访问](kubernetes笔记.assets/Harbor访问.png)
+![Harbor访问](media/kubernetes笔记.assets/Harbor访问.png)
 
 > 到这里Harbor基本安装完成
 
@@ -812,7 +812,7 @@ myapp-pod                          1/1     Running   0          12s
 
 ### 容器生命周期
 
-![容器生命周期图](kubernetes笔记.assets/容器生命周期图.png)
+![容器生命周期图](media/kubernetes笔记.assets/容器生命周期图.png)
 
 #### Init 初始容器
 
@@ -1520,7 +1520,7 @@ kubectl rollout pause deployment/nginx-deployment
 
 > 更新时将会创建出两个RS，其中旧的RS一次减少25%的pod而新的RS一次创建25%的pod
 
-![Deployment更新过程图](kubernetes笔记.assets/Deployment更新过程图.png)
+![Deployment更新过程图](media/kubernetes笔记.assets/Deployment更新过程图.png)
 
 1.  初始创建Deployment，系统创建了一个ReplicaSet，并按照用户的需求创建了3个Pod副本；
 2.  当更新Deployment时，系统创建一个新的ReplicaSet，并将其副本数量扩展到1，然后将旧的ReplicaSet缩减为2；
@@ -1672,7 +1672,7 @@ Hello from the Kubernetes cluster
 
 `Kubernetes Service` 定义了这样一种抽象：逻辑上的一组 `Pod`，一种可以访问它们的策略 —— 通常称为微服务。 这一组 `Pod `能够被 `Service `访问到，通常是通过 [选择算符](https://kubernetes.io/zh/docs/concepts/overview/working-with-objects/labels/) （`Label Selector`）
 
-![svc原理图](kubernetes笔记.assets/svc原理图.png)
+![svc原理图](media/kubernetes笔记.assets/svc原理图.png)
 
 > 访问`svc`的时候，就是通过`Round Robin`（轮询算法）访问下面一个`Pod`，有且只有这一个算法。
 
@@ -1691,13 +1691,13 @@ Hello from the Kubernetes cluster
 - **LoadBalancer**：在 NodePort 的基础上，借助 cloud provider 创建一个外部负载均衡器，并将请求转发到`<NodeIP>: NodePort`
 - **ExternalName**：把集群外部的服务引入到集群内部来，在集群内部直接使用。没有任何类型代理被创建，这只有 kubernetes 1.7 或更高版本的 kube-dns 才支持
 
-![Service 原理图](kubernetes笔记.assets/Service 原理图.png)
+![Service 原理图](media/kubernetes笔记.assets/Service 原理图.png)
 
 #### ClusterIP
 
 **clusterIP** 主要在每个 `node `节点使用 `iptables`，将发向 **clusterIP** 对应端口的数据，转发到 `kube-proxy` 中。然后 `kube-proxy` 自己内部实现有负载均衡的方法，并可以查询到这个 `service `下对应 `pod `的地址和端口，进而把数据转发给对应的 `pod` 的地址和端口
 
-![ClusterIP图](kubernetes笔记.assets/ClusterIP图.png)
+![ClusterIP图](media/kubernetes笔记.assets/ClusterIP图.png)
 
 为了实现图上的功能，主要需要以下几个组件的协同工作：
 
@@ -1853,7 +1853,7 @@ myapp-headless   ClusterIP   None            <none>        80/TCP         15m
 
 可以通过`nodeip:31559`访问
 
-![NodePort测试图](kubernetes笔记.assets/NodePort测试图.png)
+![NodePort测试图](media/kubernetes笔记.assets/NodePort测试图.png)
 
 #### LoadBalancer
 
@@ -1861,7 +1861,7 @@ myapp-headless   ClusterIP   None            <none>        80/TCP         15m
 
 > LB：由供应商提供的，LAAS（负载均衡即服务）
 
-![LoadBalancer图](kubernetes笔记.assets/LoadBalancer图.png)
+![LoadBalancer图](media/kubernetes笔记.assets/LoadBalancer图.png)
 
 #### ExternalName
 
@@ -1909,11 +1909,11 @@ my-service-1     ExternalName   <none>          ink.bzm.com   <none>         7s
 
 #### 1、userspace 代理模式
 
-![userspace 代理模式图](kubernetes笔记.assets/userspace 代理模式图.png)
+![userspace 代理模式图](media/kubernetes笔记.assets/userspace 代理模式图.png)
 
 #### 2、iptables 代理模式
 
-![iptables 代理模式图](kubernetes笔记.assets/iptables 代理模式图-1603763876622.png)
+![iptables 代理模式图](media/kubernetes笔记.assets/iptables 代理模式图-1603763876622.png)
 
 #### 3、ipvs代理模式
 
@@ -1930,7 +1930,7 @@ my-service-1     ExternalName   <none>          ink.bzm.com   <none>         7s
 
 >  <!--注意: ipvs模式假定在运行kube-proxy 之前在节点上都已经安装了IPVS 内核模块。当kube-proxy 以 ipvs 代理模式启动时，kube-proxy 将验证节点上是否安装了工PVs模块，如果未安装，则kube-proxy将回退到 iptables 代理模式-->
 
-![ipvs代理模式图](kubernetes笔记.assets/ipvs代理模式图.png)
+![ipvs代理模式图](media/kubernetes笔记.assets/ipvs代理模式图.png)
 
 ```shell
 [root@k8s-master01 ~]# ipvsadm -Ln
@@ -1955,11 +1955,11 @@ kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   17d
 
 ***Ingress-Nginx*** 官方网站：https://kubernetes.github.io/ingress-nginx/
 
-![Ingress-1](kubernetes笔记.assets/Ingress-1.png)
+![Ingress-1](media/kubernetes笔记.assets/Ingress-1.png)
 
 > **Nginx**：nodePort
 
-![Ingress-2](kubernetes笔记.assets/Ingress-2.png)
+![Ingress-2](media/kubernetes笔记.assets/Ingress-2.png)
 
 
 
@@ -2348,11 +2348,11 @@ ingress-2   www2.bzmingress.com   10.100.104.99   80      11m
 
 http://www1.bzmingress.com:31672/
 
-![www1.bzmingress.com:31672](kubernetes笔记.assets/www1.png)
+![www1.bzmingress.com:31672](media/kubernetes笔记.assets/www1.png)
 
 http://www2.bzmingress.com:31672/
 
-![www2.bzmingress.com:31672](kubernetes笔记.assets/www2.png)
+![www2.bzmingress.com:31672](media/kubernetes笔记.assets/www2.png)
 
 > `Ingress `虚拟主机功能演示完成。
 
@@ -2465,7 +2465,7 @@ ingress-nginx   NodePort   10.100.104.99   <none>        80:31672/TCP,443:31851/
 
 访问：`www3.bzmingress.com:31851`测试
 
-![www3](kubernetes笔记.assets/www3.png)
+![www3](media/kubernetes笔记.assets/www3.png)
 
 #### Ingress 实现 BasicAuth
 
@@ -2529,11 +2529,11 @@ ingress-nginx   NodePort   10.100.104.99   <none>        80:31672/TCP,443:31851/
 
 再访问：`auth.bzmingress.com:31672` 测试
 
-![auth](kubernetes笔记.assets/auth.png)
+![auth](media/kubernetes笔记.assets/auth.png)
 
 > 输入设置的用户名 ，密码
 
-![auth2](kubernetes笔记.assets/auth2.png)
+![auth2](media/kubernetes笔记.assets/auth2.png)
 
 #### Ingress 实现 Rewrite
 
@@ -2571,7 +2571,7 @@ ingress-nginx   NodePort   10.100.104.99   <none>        80:31672/TCP,443:31851/
 
 访问：`www4.bzmingress.com:31672/ `将会跳转到 `www3.bzmingress.com:31851/`
 
-![Ingress-Rewrite](kubernetes笔记.assets/Ingress-Rewrite.png)
+![Ingress-Rewrite](media/kubernetes笔记.assets/Ingress-Rewrite.png)
 
 > 除此之外还有一些常用的配置，具体可以参考 Ingress 官网：[kubernetes.github.io/ingress-ngi…](https://kubernetes.github.io/ingress-nginx/)
 
@@ -2593,7 +2593,7 @@ ingress-nginx   NodePort   10.100.104.99   <none>        80:31672/TCP,443:31851/
 
 > `ConfigMap`的作用与他类似
 
- ![ConfigMap 作用图](kubernetes笔记.assets/ConfigMap 作用图.png)
+ ![ConfigMap 作用图](media/kubernetes笔记.assets/ConfigMap 作用图.png)
 
 #### ConfigMap 创建
 
@@ -3124,7 +3124,7 @@ spec:
 
 `Kubernetes `中的卷有明确的寿命——与封装它的 `Pod `相同。所以，卷的生命比 `Pod `中的所有容器都长，当这个容器重启时数据仍然得以保存。当然，当 `Pod` 不再存在时，卷也将不复存在。也许更重要的是，`Kubernetes `支持多种类型的卷，`Pod `可以同时使用任意数量的卷。
 
-![容器重启Volume流程](kubernetes笔记.assets/容器重启Volume流程.png)
+![容器重启Volume流程](media/kubernetes笔记.assets/容器重启Volume流程.png)
 
 > 在前面**pod概念**中已经说到，在同一个Pod里面，即共享网络，又共享存储。
 
@@ -3434,7 +3434,7 @@ spec:
 >
 > 最新版本中的`Recycle`已被废弃，点击 [官网查看](https://kubernetes.io/zh/docs/concepts/storage/persistent-volumes/)
 >
-> ![Recycle 废弃说明图](kubernetes笔记.assets/Recycle 废弃说明图.png)
+> ![Recycle 废弃说明图](media/kubernetes笔记.assets/Recycle 废弃说明图.png)
 
 ##### 状态
 
@@ -3648,7 +3648,7 @@ nfsv1   5Gi        RWO            Recycle          Bound    default/www-web-0   
 
 ##### 1、pv无法删除
 
-![pv始终处于Terminating状态](kubernetes笔记.assets/pv始终处于Terminating状态.png)
+![pv始终处于Terminating状态](media/kubernetes笔记.assets/pv始终处于Terminating状态.png)
 
 ```shell
 $ kubectl patch pv nfsv3 -p '{"metadata":{"finalizers":null}}'
@@ -4188,11 +4188,11 @@ myweb-858c5d996f-rckf4   1/1     Running   0          66s   10.244.1.91   k8s-no
 `Kubernetes` 使用了**认证**（Authentication）、**鉴权**（Authorization）、**准入控制**（Admission
 Control）三步来保证 `API Server` 的安全
 
-![20201118001129159](kubernetes笔记.assets/20201118001129159.png)
+![20201118001129159](media/kubernetes笔记.assets/20201118001129159.png)
 
 ### 认证（Authentication）
 
-![20201118102420514](kubernetes笔记.assets/20201118102420514-1606812810079.png)
+![20201118102420514](media/kubernetes笔记.assets/20201118102420514-1606812810079.png)
 
 - HTTP Token 认证：通过一个 Token 来识别合法用户
   - HTTP Token 的认证是用一个很长的特殊编码方式的并且难以被模仿的字符串 Token 来表达客户的一种方式。Token 是一个很长的很复杂的字符串，每一个 Token 对应一个用户名存储在 API Server 能访问的**文件中**。当客户端发起 API 调用请求时，需要在 HTTP Header 里放入 Token
@@ -4208,11 +4208,11 @@ Control）三步来保证 `API Server` 的安全
 
 **1、 HTTPS 证书认证**
 
-![2020111809195278](kubernetes笔记.assets/2020111809195278.png)
+![2020111809195278](media/kubernetes笔记.assets/2020111809195278.png)
 
 **2、需要认证的组件**
 
-![2020111809201722](kubernetes笔记.assets/2020111809201722.png)
+![2020111809201722](media/kubernetes笔记.assets/2020111809201722.png)
 
 **3、认证的组件的两种类型：**
 
@@ -4306,7 +4306,7 @@ RBAC 引入了 4 个新的顶级资源对象：`Role`、`ClusterRole`、`RoleBin
 - `Role` 和 `RoleBinding` 是名称空间级别资源，`ClusterRole` 和 `ClusterRoleBinding` 是集群级别资源
 - `Role` 与 `RoleBinding` 之间的关系如下图所示，Role 用来指定一些角色，每个角色对资源的权限不同，RoleBinding 将这些角色赋予给用户、组和SA 。
 
-![20201118104932620](kubernetes笔记.assets/20201118104932620.png)
+![20201118104932620](media/kubernetes笔记.assets/20201118104932620.png)
 
 需要注意的是 `Kubenetes` 并不会提供用户管理，那么 `User`、`Group`、`ServiceAccount` 指定的用户又是从哪里来的呢？ Kubenetes 组件（kubectl、kube-proxy）或是其他自定义的用户在向 CA 申请证书时，需要提供一个证书请求文件：
 
@@ -4465,7 +4465,7 @@ Subjects 中 Users 使用字符串表示，它可以是一个普通的名字字�
 
 比如，在K8s 集群 中可能，Mysql模块，Nginx模块就需要进行资源分割管理。
 
-![image-20201202143009922](kubernetes笔记.assets/image-20201202143009922.png)
+![image-20201202143009922](media/kubernetes笔记.assets/image-20201202143009922.png)
 
 ```shell
 #  创建用户

@@ -24,7 +24,7 @@
 
 **Helm包含两个组件：Helm客户端和Tiller服务器** 。如下图所示：
 
-![k8vx8x0o9x](Kubernetes包管理器——Helm.assets/k8vx8x0o9x.png)
+![k8vx8x0o9x](media/Kubernetes包管理器——Helm.assets/k8vx8x0o9x.png)
 
 > Helm客户端负责chart和release的创建和管理以及和Tiller的交互。Tiller服务器运行在k8s集群中，它会处理Helm客户端的请求，与k8s API Server进行交互。
 
@@ -49,7 +49,7 @@
 
 > 官方下载地址：https://github.com/helm/helm/releases
 
-![image-20201202164820477](Kubernetes包管理器——Helm.assets/image-20201202164820477.png)
+![image-20201202164820477](media/Kubernetes包管理器——Helm.assets/image-20201202164820477.png)
 
 ```shell
 # 如无需更换版本，直接执行下载
@@ -84,9 +84,9 @@ helm version
 2. 搜索需要的包
 3. 按照 `install` 步骤操作即可
 
-![å¨è¿éæå¥å¾çæè¿°](Kubernetes包管理器——Helm.assets/20201119102952506.png)
+![å¨è¿éæå¥å¾çæè¿°](media/Kubernetes包管理器——Helm.assets/20201119102952506.png)
 
-![img](Kubernetes包管理器——Helm.assets/20201119103129715.png)
+![img](media/Kubernetes包管理器——Helm.assets/20201119103129715.png)
 
 ### helm 自定义模板
 
@@ -260,7 +260,7 @@ kubernetes-dashboard   NodePort    10.102.46.217   <none>        443:32671/TCP  
 
 最后访问地址：https://192.168.200.61:32671
 
-![image-20201210173720061](Kubernetes包管理器——Helm.assets/image-20201210173720061.png)
+![image-20201210173720061](media/Kubernetes包管理器——Helm.assets/image-20201210173720061.png)
 
 > 可以发现有两种方式验证，下面查看token方式
 
@@ -271,11 +271,11 @@ kubernetes-dashboard   NodePort    10.102.46.217   <none>        443:32671/TCP  
  kubectl describe secret -n kube-system kubernetes-dashboard-token-bqtxz
 ```
 
-![image-20201210174143616](Kubernetes包管理器——Helm.assets/image-20201210174143616.png)
+![image-20201210174143616](media/Kubernetes包管理器——Helm.assets/image-20201210174143616.png)
 
 > 将token复制进去，即可登录成功
 
-![image-20201210174609176](Kubernetes包管理器——Helm.assets/image-20201210174609176.png)
+![image-20201210174609176](media/Kubernetes包管理器——Helm.assets/image-20201210174609176.png)
 
 > 登录成功后，进去界面，发现什么资源都显示不了，是因为 `dashboard` 默认的 `serviceaccount` 并没有权限，所以我们需要给予它授权。
 
@@ -304,7 +304,7 @@ clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
 
 > 授权成功，就可以查看到资源了
 
-![image-20201210175221863](Kubernetes包管理器——Helm.assets/image-20201210175221863.png)
+![image-20201210175221863](media/Kubernetes包管理器——Helm.assets/image-20201210175221863.png)
 
 ## Helm 部署 Prometheus
 
@@ -316,7 +316,7 @@ Prometheus github 地址：https://github.com/coreos/kube-prometheus
 
 ### 组件说明
 
-![Prometheus架构](Kubernetes包管理器——Helm.assets/Prometheus架构-1607668074107.png)
+![Prometheus架构](media/Kubernetes包管理器——Helm.assets/Prometheus架构-1607668074107.png)
 
 1. `MetricServer`：是 kubernetes 集群资源使用情况的聚合器，收集数据给 kubernetes 集群内使用，如 kubectl,hpa,scheduler 等。
 2. `PrometheusOperator`：是一个系统监测和警报工具箱，用来存储监控数据。
@@ -452,11 +452,11 @@ prometheus-k8s          NodePort    10.97.67.69      <none>        9090:30200/TC
 
 > 根据前面安装时候的配置，`prometheus` 对应的 `nodeport` 端口为 `30200`，访问 `http://MasterIP:30200`
 
-![image-20201211151555699](Kubernetes包管理器——Helm.assets/image-20201211151555699.png)
+![image-20201211151555699](media/Kubernetes包管理器——Helm.assets/image-20201211151555699.png)
 
 **1、查看 prometheus 的节点状态：**
 
-![image-20201211151634877](Kubernetes包管理器——Helm.assets/image-20201211151634877.png)
+![image-20201211151634877](media/Kubernetes包管理器——Helm.assets/image-20201211151634877.png)
 
 **2、测试查询**
 
@@ -466,7 +466,7 @@ prometheus 的 WEB 界面上提供了基本的查询 K8S 集群中每个 Pod 的
 sum by (pod_name)( rate(container_cpu_usage_seconds_total{image!="", pod_name!=""}[1m] ) )
 ```
 
-![image-20201211151919835](Kubernetes包管理器——Helm.assets/image-20201211151919835.png)
+![image-20201211151919835](media/Kubernetes包管理器——Helm.assets/image-20201211151919835.png)
 
 上述的查询有出现数据，说明 `node-exporter` 往 `prometheus` 中写入数据正常，接下来我们就可以部署 `grafana` 组件，实现更友好的 `webui` 展示数据了
 
@@ -483,19 +483,29 @@ grafana                 NodePort    10.100.227.242   <none>        3000:30100/TC
 
 如上可以看到 `grafana` 的端口号是 `30100`，浏览器访问：`http://MasterIP:30100`，用户名密码默认 `admin/admin`，第一次登录后会要求修改密码。
 
-![image-20201211152359619](Kubernetes包管理器——Helm.assets/image-20201211152359619.png)
+![image-20201211152359619](media/Kubernetes包管理器——Helm.assets/image-20201211152359619.png)
 
 **1、添加数据源**
 
-![20201126150309998](Kubernetes包管理器——Helm.assets/20201126150309998.png)
+![20201126150309998](media/Kubernetes包管理器——Helm.assets/20201126150309998.png)
 
-![202011261515331](Kubernetes包管理器——Helm.assets/202011261515331.png)
+![202011261515331](media/Kubernetes包管理器——Helm.assets/202011261515331.png)
 
 **2、查看节点**
 
 点击 Home，选择监控的对象，这里选择 Nodes
 
-![image-20201211153054843](Kubernetes包管理器——Helm.assets/image-20201211153054843.png)
+![image-20201211153054843](media/Kubernetes包管理器——Helm.assets/image-20201211153054843.png)
+
+
+
+## Horizontal Pod Autoscaling（HPA）
+
+`HPA` 的全称为（Horizontal Pod Autoscaling）它可以根据当前 `pod` 资源的使用率（如 CPU、磁盘、内存等），进行副本数的动态的扩容与缩容，以便减轻各个 `pod` 的压力。当 `pod` 负载达到一定的阈值后，会根据扩缩容的策略生成更多新的 `pod` 来分担压力，当 `pod`的使用比较空闲时，在稳定空闲一段时间后，还会自动减少 `pod` 的副本数量。
+
+若要实现自动扩缩容的功能，还需要部署 `heapster` 服务，用来收集及统计资源的利用率，支持 `kubectl top` 命令，`heapster` 服务集成在 `prometheus`（普罗米修斯） `Mertric Server` 服务中，所以说，要先安装 `prometheus`。
+
+官方文档：https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/
 
 
 
