@@ -6,7 +6,7 @@
 
 >   是  Google	多年大规模容器管理技术 Borg的开源版本，由Go语言翻写。
 
-<img src="../笔记/kubernetes笔记.assets/k8s图标.png" alt="k8s图标" style="zoom:80%;" />
+<img src="media/kubernetes笔记.assets/k8s图标.png" alt="k8s图标" style="zoom:80%;" />
 
 ### Kubernetes 能做什么？
 
@@ -166,7 +166,7 @@ DaemonSet 的一些典型用法：
 <u>Pod1 至Pod2：</u>
 
 -   *Pod1* 与*Pod2* 不在同一台主机，*Pod*的地址是与*docker0*在同一个网段的，但*docker0*网段与宿主机网卡是两个完全不同的IP网段，并且不同Node之间的通信只能通过宿主机的物理网卡进行。将Pod的IP和所在Node的IP关联起来，通过这个关联让Pod可以互相访问
--   *Pod1* 与*Pod2* 在同一台机器，由*Docker0* 网桥直接转发请求至*Pod2*，不需要经过*Flannel*  
+-    *Pod1* 与*Pod2* 在同一台机器，由*Docker0* 网桥直接转发请求至*Pod2*，不需要经过*Flannel*  
 
 <u>Pod 至 Service的网络：</u>
 

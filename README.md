@@ -1,8 +1,10 @@
 ## README.md
 
-[kubernetes笔记](https://gitee.com/BuZM/kubernetes/blob/master/笔记/kubernetes笔记.md)
+**kubernetes笔记**
 
-![qrcode_for_gh_33acc8ff61a1_258](README.assets/kubernetes笔记.png)
+![kubernetes笔记](media/README.assets/kubernetes笔记-1609895171733.png)
+
+
 
 **以上来源自己总结、网上收集、视频笔记，如果有侵权之处，可以联系我进行删除**
 
@@ -16,6 +18,6 @@
 
 **公众号**：*<u>云计算小千</u>*
 
-![qrcode_for_gh_33acc8ff61a1_258](README.assets/qrcode_for_gh_33acc8ff61a1_258.jpg)
+![image-20210106090625962](media/README.assets/image-20210106090625962.png)
 
 1
