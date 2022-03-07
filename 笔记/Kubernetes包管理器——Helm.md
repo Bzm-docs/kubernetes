@@ -1,36 +1,48 @@
-# Kubernetes包管理器——Helm
+---
+date: 2021-03-07
+autoIgnore: false
+autoSort: 1010
+categories:
+  - 云计算
+tags:
+  - Kubernetes
+isShowComments: true
+publish: true
+---
 
-## helm简介
+# Kubernetes 包管理器——Helm
 
-### 为什么需要helm
+## helm 简介
 
-在没使用helm之前，向`kubernetes`部署应用，我们要依次部署`deployment`,`service`,`configMap`等,步骤较繁琐。况且随着很多项目微服务化，复杂的应用在容器中部署以及管理显得较为复杂.
+### 为什么需要 helm
+
+在没使用 helm 之前，向`kubernetes`部署应用，我们要依次部署`deployment`,`service`,`configMap`等,步骤较繁琐。况且随着很多项目微服务化，复杂的应用在容器中部署以及管理显得较为复杂.
 
 `helm`通过打包的方式，支持发布的版本管理和控制,很大程度上简化了`Kubernetes`应用的部署和管理
 
-### helm中几个概念
+### helm 中几个概念
 
 `Helm`可以理解为`Kubernetes`的包管理工具，可以方便地发现、共享和使用为`Kubernetes`构建的应用，它包含几个基本概念
 
-- **Chart**: 一个Helm包，其中包含了运行一个应用所需要的镜像、依赖和资源定义等，还可能包含Kubernetes集群中的服务定义
+- **Chart**: 一个 Helm 包，其中包含了运行一个应用所需要的镜像、依赖和资源定义等，还可能包含 Kubernetes 集群中的服务定义
 
-> 可以理解为docker的image
+> 可以理解为 docker 的 image
 
 - **Release**: 在`Kubernetes`集群上运行的 `Chart`的一个实例。在同一个集群上，一个 `Chart`可以安装很多次。每次安装都会创建一个新的`release`
 
-> 可以理解为docker的container实例
+> 可以理解为 docker 的 container 实例
 
 - **Repository**: 用于发布和存储 Chart 的仓库
 
-**Helm包含两个组件：Helm客户端和Tiller服务器** 。如下图所示：
+**Helm 包含两个组件：Helm 客户端和 Tiller 服务器** 。如下图所示：
 
 ![k8vx8x0o9x](media/Kubernetes包管理器——Helm.assets/k8vx8x0o9x.png)
 
-> Helm客户端负责chart和release的创建和管理以及和Tiller的交互。Tiller服务器运行在k8s集群中，它会处理Helm客户端的请求，与k8s API Server进行交互。
+> Helm 客户端负责 chart 和 release 的创建和管理以及和 Tiller 的交互。Tiller 服务器运行在 k8s 集群中，它会处理 Helm 客户端的请求，与 k8s API Server 进行交互。
 
 ### helm 用途
 
-做为`Kubernetes`的一个包管理工具，Helm具有如下功能：
+做为`Kubernetes`的一个包管理工具，Helm 具有如下功能：
 
 - 创建新的`chart`
 
@@ -39,13 +51,14 @@
 - 上传`chart`到`chart`仓库或从仓库中下载 `chart`
 
   - 官方`chart`仓库是: [https://hub.helm.sh](https://hub.helm.sh/)
+
 - 在`Kubernetes`集群中安装或卸载`chart`
 
 - 用`Helm`管理安装的`chart`的发布周期
 
 ## helm 部署
 
-- 注意：这里安装的是`helm v3.2.4`，如需下载更新的版本，可以至github官方repo选择
+- 注意：这里安装的是`helm v3.2.4`，如需下载更新的版本，可以至 github 官方 repo 选择
 
 > 官方下载地址：https://github.com/helm/helm/releases
 
@@ -70,7 +83,7 @@ helm version
 
 ## helm 详解
 
-可以直接使用官方的chart仓库或者其他仓库来安装一些`chart`
+可以直接使用官方的 chart 仓库或者其他仓库来安装一些`chart`
 
 > [https://hub.helm.sh](https://hub.helm.sh/)
 >
@@ -78,7 +91,7 @@ helm version
 
 ### helm 使用
 
-**以官方仓库的一个redis为例**
+**以官方仓库的一个 redis 为例**
 
 1. 访问 `Helm` 仓库：https://artifacthub.io/
 2. 搜索需要的包
@@ -101,9 +114,9 @@ helm version
 └── values.yaml
 ```
 
-#### 自定义chart的示例
+#### 自定义 chart 的示例
 
-**第一步: 准备自定义chart相关文件**
+**第一步: 准备自定义 chart 相关文件**
 
 ```shell
 # 1. 新建myapp文件夹存放chart
@@ -170,7 +183,7 @@ image:
 EOF
 ```
 
-**第二步: 使用上面的自定义chart**
+**第二步: 使用上面的自定义 chart**
 
 ```shell
 # 将chart实例化成release
@@ -206,7 +219,7 @@ helm upgrade——chart 升级为一个新版本
 helm upgrade [RELEASE] [CHART] [flags]
 ```
 
-> 发现helm v2，v3 版本不一样，命令差别挺大，详细请查看官方文档：https://helm.sh/zh/docs/helm/
+> 发现 helm v2，v3 版本不一样，命令差别挺大，详细请查看官方文档：https://helm.sh/zh/docs/helm/
 
 ## Helm 部署 dashboard
 
@@ -262,18 +275,18 @@ kubernetes-dashboard   NodePort    10.102.46.217   <none>        443:32671/TCP  
 
 ![image-20201210173720061](media/Kubernetes包管理器——Helm.assets/image-20201210173720061.png)
 
-> 可以发现有两种方式验证，下面查看token方式
+> 可以发现有两种方式验证，下面查看 token 方式
 
 ```shell
 # 查看 kubernetes-dashboard-token
  kubectl get secret -n kube-system | grep kubernetes-dashboard-token
- 
+
  kubectl describe secret -n kube-system kubernetes-dashboard-token-bqtxz
 ```
 
 ![image-20201210174143616](media/Kubernetes包管理器——Helm.assets/image-20201210174143616.png)
 
-> 将token复制进去，即可登录成功
+> 将 token 复制进去，即可登录成功
 
 ![image-20201210174609176](media/Kubernetes包管理器——Helm.assets/image-20201210174609176.png)
 
@@ -298,7 +311,7 @@ roleRef:
 ```
 
 ```shell
-[root@k8s-master01 ~]# kubectl apply -f dashboard-admin.yaml 
+[root@k8s-master01 ~]# kubectl apply -f dashboard-admin.yaml
 clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
 ```
 
@@ -312,7 +325,7 @@ Prometheus github 地址：https://github.com/coreos/kube-prometheus
 
 ### Prometheus 简介
 
-`Prometheus`是一个开放性的监控解决方案，用户可以非常方便的安装和使用Prometheus并且能够非常方便的对其进行扩展。为了能够更加直观的了解Prometheus Server，接下来我们将在本地部署并运行一个Prometheus Server实例，通过Node Exporter采集当前主机的系统资源使用情况。 并通过Grafana创建一个简单的可视化仪表盘。
+`Prometheus`是一个开放性的监控解决方案，用户可以非常方便的安装和使用 Prometheus 并且能够非常方便的对其进行扩展。为了能够更加直观的了解 Prometheus Server，接下来我们将在本地部署并运行一个 Prometheus Server 实例，通过 Node Exporter 采集当前主机的系统资源使用情况。 并通过 Grafana 创建一个简单的可视化仪表盘。
 
 ### 组件说明
 
@@ -324,8 +337,6 @@ Prometheus github 地址：https://github.com/coreos/kube-prometheus
 4. `KubeStateMetrics`：收集 kubernetes 集群内资源对象数据，制定告警规则。
 5. `Prometheus`：采用 pull 方式收集 apiserver，scheduler，controller-manager，kubelet 组件数据，通过 http 协议传输。
 6. `Grafana`：是可视化数据统计和监控平台。
-
-
 
 ### 安装部署
 
@@ -378,12 +389,12 @@ metadata:
   name: prometheus-k8s
   namespace: monitoring
 spec:
-  type: NodePort	# 添加
+  type: NodePort # 添加
   ports:
     - name: web
       port: 9090
       targetPort: web
-      nodePort: 30200	# 添加
+      nodePort: 30200 # 添加
   selector:
     app: prometheus
     prometheus: k8s
@@ -401,12 +412,12 @@ metadata:
   name: alertmanager-main
   namespace: monitoring
 spec:
-  type: NodePort	# 添加
+  type: NodePort # 添加
   ports:
     - name: web
       port: 9093
       targetPort: web
-      nodePort: 30300	# 添加
+      nodePort: 30300 # 添加
   selector:
     alertmanager: main
     app: alertmanager
@@ -431,10 +442,10 @@ kubectl apply -f .
 
 ```shell
 $ kubectl top node
-NAME           CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%   
-k8s-master01   1500m        75%    1142Mi          60%       
-k8s-node01     1691m        84%    946Mi           50%       
-k8s-node02     1411m        70%    912Mi           48% 
+NAME           CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
+k8s-master01   1500m        75%    1142Mi          60%
+k8s-node01     1691m        84%    946Mi           50%
+k8s-node02     1411m        70%    912Mi           48%
 
 $ kubectl top pod -n monitoring
 NAME                                  CPU(cores)   MEMORY(bytes)
@@ -446,7 +457,7 @@ alertmanager-main-1                   2m           22Mi
 
 ```shell
 $ kubectl get svc -o wide -n monitoring
-NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                   
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)
 prometheus-k8s          NodePort    10.97.67.69      <none>        9090:30200/TCP               7m31s   app=prometheus,prometheus=k8s
 ```
 
@@ -497,8 +508,6 @@ grafana                 NodePort    10.100.227.242   <none>        3000:30100/TC
 
 ![image-20201211153054843](media/Kubernetes包管理器——Helm.assets/image-20201211153054843.png)
 
-
-
 ## Horizontal Pod Autoscaling（HPA）
 
 `HPA` 的全称为（Horizontal Pod Autoscaling）它可以根据当前 `pod` 资源的使用率（如 CPU、磁盘、内存等），进行副本数的动态的扩容与缩容，以便减轻各个 `pod` 的压力。当 `pod` 负载达到一定的阈值后，会根据扩缩容的策略生成更多新的 `pod` 来分担压力，当 `pod`的使用比较空闲时，在稳定空闲一段时间后，还会自动减少 `pod` 的副本数量。
@@ -507,13 +516,8 @@ grafana                 NodePort    10.100.227.242   <none>        3000:30100/TC
 
 官方文档：https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/
 
-
-
-
-
 ## 其他
 
-[玩K8S不得不会的HELM](https://zhuanlan.zhihu.com/p/79046244)
+[玩 K8S 不得不会的 HELM](https://zhuanlan.zhihu.com/p/79046244)
 
 [prometheus-book](https://yunlzheng.gitbook.io/prometheus-book/)
-
