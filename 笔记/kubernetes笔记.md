@@ -1306,7 +1306,7 @@ Kubernetes 中内建了很多 controller（控制器），这些相当于一个�
 
 ### 控制器案例
 
-#### ReplicaSet
+#### ReplicaSjet
 
 `rs.yaml`
 
@@ -1947,6 +1947,53 @@ kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   17d
 ```
 
 > 可以看出，如果有人访问：10.96.0.1:443 接口，就会被访问到当前机器的 192.168.200.61:6443 接口
+
+### 无头服务（Headless Services）
+
+有时不需要或不想要负载均衡，以及单独的 Service IP。 遇到这种情况，可以通过指定 Cluster IP（`spec.clusterIP`）的值为 `"None"` 来创建 `Headless` Service。
+
+**myapp-svc-headless.yaml**
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-headless
+  namespace: default
+spec:
+  selector:
+    app: myapp
+  clusterIP: "None"
+  ports:
+  - port: 80
+    targetPort: 80
+```
+
+```shell
+[root@k8s-master01 ~]# dig -t A myapp-headless.default.svc.cluster.local. @10.96.0.10
+```
+
+### 发布服务（服务类型)
+
+对一些应用的某些部分（如前端），可能希望将其暴露给 Kubernetes 集群外部 的 IP 地址。Kubernetes `ServiceTypes` 允许指定你所需要的 Service 类型，默认是 `ClusterIP`。
+
+#### ClusterIP
+
+通过集群的内部 IP 暴露服务，选择该值时服务只能够在集群内部访问。 这也是默认的 `ServiceType`。
+
+#### [NodePort](https://kubernetes.io/zh/docs/concepts/services-networking/service/#type-nodeport)
+
+将 `type` 字段设置为 `NodePort`，则 Kubernetes 控制平面将在 `--service-node-port-range` 标志指定的范围内分配端口（默认值：30000-32767）。 每个节点将那个端口（每个节点上的相同端口号）代理到你的服务中。 你的服务在其 `.spec.ports[*].nodePort` 字段中要求分配的端口。
+
+#### [LoadBalancer](https://kubernetes.io/zh/docs/concepts/services-networking/service/#loadbalancer)
+
+在使用支持外部负载均衡器的云提供商的服务时，设置 `type` 的值为 `"LoadBalancer"`， 将为 Service 提供负载均衡器。 负载均衡器是异步创建的，关于被提供的负载均衡器的信息将会通过 Service 的 `status.loadBalancer` 字段发布出去。
+
+![image-20220311164134146](media/kubernetes笔记.assets/image-20220311164134146.png)
+
+#### [ExternalName](https://kubernetes.io/zh/docs/concepts/services-networking/service/#externalname)
+
+类型为 ExternalName 的服务将服务映射到 DNS 名称，而不是典型的选择器，例如 `my-service` 或者 `cassandra`。 你可以使用 `spec.externalName` 参数指定这些服务。
 
 ### Ingress
 
